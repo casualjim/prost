@@ -7,7 +7,8 @@ use std::mem;
 use std::u32;
 use std::usize;
 
-use ::bytes::{buf::ext::BufExt, Buf, BufMut};
+use ::bytes::{Buf, BufMut};
+use ::bytes::buf::ext::BufExt;
 
 use crate::DecodeError;
 use crate::Message;
@@ -31,10 +32,10 @@ where
         for byte in buf.bytes_mut() {
             i += 1;
             if value < 0x80 {
-                *byte = mem::MaybeUninit::new(value as u8);
+                *byte = std::mem::MaybeUninit::new(value as u8);
                 break 'outer;
             } else {
-                *byte = mem::MaybeUninit::new(((value & 0x7F) | 0x80) as u8);
+                *byte = std::mem::MaybeUninit::new(((value & 0x7F) | 0x80) as u8);
                 value >>= 7;
             }
         }
@@ -1443,8 +1444,8 @@ mod test {
             let roundtrip_value = decode_varint(&mut encoded.clone()).expect("decoding failed");
             assert_eq!(value, roundtrip_value);
 
-            println!("encoding {:?}", encoded);
-            let roundtrip_value = decode_varint_slow(&mut encoded).expect("slow decoding failed");
+            let roundtrip_value =
+                decode_varint_slow(&mut encoded.clone()).expect("slow decoding failed");
             assert_eq!(value, roundtrip_value);
         }
 

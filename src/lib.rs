@@ -62,6 +62,7 @@ pub fn decode_length_delimiter<B>(mut buf: B) -> Result<usize, DecodeError>
 where
     B: Buf,
 {
+    let mut buf = buf;
     let length = decode_varint(&mut buf)?;
     if length > usize::max_value() as u64 {
         return Err(DecodeError::new(

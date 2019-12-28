@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 use std::usize;
 
-use bytes::{Buf, BufMut};
+use ::bytes::{Buf, BufMut};
 
 use crate::encoding::{
     decode_key, encode_varint, encoded_len_varint, message, DecodeContext, WireType,
@@ -108,6 +108,7 @@ pub trait Message: Debug + Send + Sync {
         B: Buf,
         Self: Sized,
     {
+        let mut buf = buf;
         let ctx = DecodeContext::default();
         while buf.has_remaining() {
             let (tag, wire_type) = decode_key(&mut buf)?;
